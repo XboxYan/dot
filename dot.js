@@ -2,12 +2,14 @@ var dotarr = [
     {
         x: 100,
         y: 250,
-        name: '入口1'
+        name: '入口1',
+        text: '描述1'
     },
     {
         x: 250,
         y: 360,
-        name: '入口2'
+        name: '入口2',
+        text: '描述2'
     }
 ]
 
@@ -19,10 +21,8 @@ var $IMG = document.getElementById('img');
 var $POP = document.getElementById('pop_window');
 //名称
 var $NAME = document.getElementById('pop_name');
-//X
-var $X = document.getElementById('pos_x');
-//Y
-var $Y = document.getElementById('pos_y');
+//描述
+var $TEXT = document.getElementById('pop_text');
 //删除按钮
 var $BTN_DEL = document.getElementById('btn_del');
 //保存按钮
@@ -46,9 +46,8 @@ function Dot(obj, i) {
     this.$dot.addEventListener('click', function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        $NAME.value = obj.name;
-        $X.innerHTML = obj.x;
-        $Y.innerHTML = obj.y;
+        $NAME.value = obj.name||'';
+        $TEXT.value = obj.text||'';
         _this.set($POP);
         _this.save(i);
         _this.cancel();
@@ -81,13 +80,15 @@ Dot.prototype.save = function (i) {
     var _this = this;
     $BTN_SAVE.onclick = function(){
         var value = $NAME.value;
+        var text = $TEXT.value;
         if(!value){
             alert('名称不能为空！')
             return
         }
         _this.name = value;
+        _this.$dot.title = value;
         dotarr[i].name = value;
-        document.querySelectorAll('.dot')[i].title = value;
+        dotarr[i].text = text;
         $POP.className = '';
     }
 }
@@ -103,7 +104,8 @@ Dot.prototype.del = function (i) {
     var _this = this;
     $BTN_DEL.onclick = function(){
         $DESKTOP.removeChild(_this.$dot);
-        dotarr.splice(i,1);
+        //dotarr.splice(i,1);
+        dotarr[i].isRemove = true;
         $POP.className = '';
     }
 }
@@ -186,5 +188,6 @@ $POP.addEventListener('click', function (ev) {
 //查看数据
 $BTN_SEE.addEventListener('click', function (ev) {
     ev.stopPropagation();
-    console.log(dotarr);
+    var DATA = dotarr.filter((el)=>(!el.isRemove));
+    console.log(DATA);
 }, false)
