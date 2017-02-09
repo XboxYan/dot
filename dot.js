@@ -122,18 +122,13 @@ Dot.prototype.drag = function (obj, i) {
             $POP.className = '';
         }
         ev.dataTransfer.effectAllowed = "move";
-        ev.dataTransfer.setData("el", ev.target);
+        //ev.dataTransfer.setData("el", ev.target);
         ev.dataTransfer.setDragImage(ev.target, 8, 44);
         //eleDrag = ev.target;
         return true;
     };
     obj.ondragend = function (ev) {
-        /*拖拽结束*/
-        dotarr[i].x = _this.x + eleDrag[0];
-        dotarr[i].y = _this.y + eleDrag[1];
-        _this.x = _this.x + eleDrag[0];
-        _this.y = _this.y + eleDrag[1];
-        _this.set(obj);
+        
         //ev.dataTransfer.clearData("el");
         //eleDrag = [ev.offsetX,ev.offsetY];
         return false
@@ -145,13 +140,23 @@ Dot.prototype.drag = function (obj, i) {
         eleDrag = [ev.offsetX - 4, ev.offsetY - 4];
         //eleDrag = [ev];
     };
-}
+    $IMG.ondragover = function (ev) {
+        /*拖拽元素在目标元素头上移动的时候*/
+        ev.preventDefault();
+        return true;
+    };
 
-$IMG.ondragover = function (ev) {
-    /*拖拽元素在目标元素头上移动的时候*/
-    ev.preventDefault();
-    return true;
-};
+    $IMG.ondrop = function (ev) {
+        /*拖拽元素在目标元素头上移动的时候*/
+        /*拖拽结束*/
+        dotarr[i].x = _this.x + eleDrag[0];
+        dotarr[i].y = _this.y + eleDrag[1];
+        _this.x = _this.x + eleDrag[0];
+        _this.y = _this.y + eleDrag[1];
+        _this.set(obj);
+        return false;
+    };
+}
 
 //初始化
 dotarr.forEach(function (el, i) {
